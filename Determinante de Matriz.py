@@ -97,7 +97,7 @@ sign_sigma = permResult(sigmaFunc(mtx_size))
 # -- PRODUTÓRIO --
 
 
-def product(sigma):
+def product(sigma,Sn):
     prod = []
     
     for j in range(len(sigma)):
@@ -111,21 +111,79 @@ def product(sigma):
                 c += 1
               
             a = matrix[i][c-1]
-            e = ((-1)**sign_sigma[i])*a
+            e = ((-1)**sign_sigma[i])*a            
             
             prod.append(e)
-    
-    return prod
 
-prod = product(sigma)
+    lis = []
+    
+    for i in range(Sn):
+        li = []
+        
+        for j in range(mtx_size):
+            li.append(prod[mtx_size*i+j])
+            
+        lis.append(li)
+    
+    
+    
+    prodResult = []
+    
+    for i in range(len(lis)):
+        obj = lis[i]
+        mult = 1
+        
+        for j in obj:
+            mult *= j
+        
+        prodResult.append(mult)
+    
+    
+        
+    
+    return prodResult
+
+
+prod = product(sigma,Sn)
 
         
 # ==================================================================     
 # -- SOMATÓRIA --    
+
+
+def summation(prod, sign_sigma):
+    a = 0
+    b = 0
+    
+    count = 0
+    
+    for i in prod:    
+        if sign_sigma[count]%2 == 0:
+            a += i
+            count += 1
+        
+        else:
+            b += i   
+            count += 1
+            
+    result = a - b
+    
+    return result
+
+
+soma = summation(prod, sign_sigma)
         
         
 # ==================================================================     
 # -- CONCLUSÃO -- 
+
+if soma == 0:
+    detA = "A matriz não contém inversa."
+
+else:
+    detA = "A matriz contém inversa."
+
+
         
 print("\n---------ESTRUTURA DA MATRIZ----------\n")
 for line in range(mtx_line):
@@ -137,7 +195,7 @@ for line in range(mtx_line):
 
 print("\n-----------RESULTADO FINAL------------\n")
 print("Sn =",Sn)
-print("σ =",sigma)
+print("sgn(σ) =",sigma)
 print("∏ =",prod)
-print("∑ =",)
-print("det(A) =",)        
+print("∑ =",soma)
+print("\ndet(A) =",soma,"->",detA)
